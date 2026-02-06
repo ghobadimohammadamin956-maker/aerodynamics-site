@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دانشنامه جامع آیرودینامیک | علم پرواز</title>
+    <!-- استفاده از فونت وزیرمتن برای ظاهر زیبا و خوانا -->
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet"
+        type="text/css" />
+
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #0056b3;
+            --accent-color: #ff9800;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --success-color: #28a745;
+            --error-color: #dc3545;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* هدر و ناوبری */
+        header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ابرهای متحرک در پس‌زمینه هدر */
+        .cloud {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            animation: floatCloud 20s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes floatCloud {
+            0% {
+                transform: translateX(-100px);
+            }
+
+            100% {
+                transform: translateX(100vw);
+            }
+        }
+
+        /* ساختار کلی */
+        main {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        section:hover {
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            color: var(--secondary-color);
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: var(--primary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.4rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        ul {
+            margin-right: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* تصاویر و مدیا */
+        .img-container {
+            width: 100%;
+            height: 300px;
+            background-color: #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .img-container:hover img {
+            transform: scale(1.05);
+        }
+
+        /* بخش انیمیشن تونل باد */
+        #wind-tunnel-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background: #222;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #444;
+            margin-top: 2rem;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .controls label {
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .controls input[type="range"] {
+            cursor: pointer;
+        }
+
+        /* انیمیشن نیروها */
+        .forces-diagram {
+            position: relative;
+            height: 300px;
+            background: #eef;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .plane-icon {
+            font-size: 80px;
+            z-index: 2;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .arrow {
+            position: absolute;
+            width: 10px;
+            height: 100px;
+            z-index: 1;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            font-weight: bold;
+            color: white;
+            font-size: 12px;
+            padding-bottom: 5px;
+            border-radius: 4px;
+        }
+
+        .arrow::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 15px solid;
+        }
+
+        .arrow-lift {
+            background-color: var(--success-color);
+            top: 20px;
+            height: 0px;
+            /* Animation Start */
+            opacity: 0.8;
+        }
+
+        .arrow-lift::after {
+            border-top-color: var(--success-color);
+        }
+
+        .arrow-weight {
+            background-color: var(--error-color);
+            bottom: 20px;
+            height: 0px;
+            opacity: 0.8;
+        }
+
+        .arrow-weight::after {
+            border-top-color: var(--error-color);
+            bottom: 0;
+            top: auto;
+            transform: translateX(-50%) rotate(180deg);
+        }
+
+        .arrow-thrust {
+            background-color: var(--accent-color);
+            left: 20px;
+            width: 0px;
+            /* Horizontal start */
+            height: 10px;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 5px;
+            padding-bottom: 0;
+        }
+
+        .arrow-thrust::after {
+            border: none;
+            border-left: 15px solid var(--accent-color);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        .arrow-drag {
+            background-color: #555;
+            right: 20px;
+            width: 0px;
+            height: 10px;
+            flex-direction: row-reverse;
+            align-items: center;
+            padding-left: 5px;
+        }
+
+        .arrow-drag::after {
+            border: none;
+            border-right: 15px solid #555;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            right: -15px;
+            left: auto;
+            top: 50%;
+            transform: translateY(-50%) rotate(0deg);
+        }
+
+        /* کلاس فعال برای انیمیشن نیروها */
+        .forces-active .arrow-lift {
+            animation: growHeight 2s forwards 0.5s;
+        }
+
+        .forces-active .arrow-weight {
+            animation: growHeight 2s forwards 0.5s;
+        }
+
+        .forces-active .arrow-thrust {
+            animation: growWidth 2s forwards 0s;
+        }
+
+        .forces-active .arrow-drag {
+            animation: growWidth 2s forwards 1s;
+        }
+
+        @keyframes growHeight {
+            to {
+                height: 80px;
+            }
+        }
+
+        @keyframes growWidth {
+            to {
+                width: 80px;
+            }
+        }
+
+        /* آزمون */
+        .quiz-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .question-block {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .options label {
+            display: block;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .options label:hover {
+            background-color: #f0f0f0;
+        }
+
+        .options input[type="radio"] {
+            margin-left: 10px;
+        }
+
+        #quiz-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-family: 'Vazirmatn', sans-serif;
+        }
+
+        #quiz-btn:hover {
+            background-color: var(--secondary-color);
+        }
+
+        #quiz-result {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .correct-answer {
+            color: var(--success-color);
+        }
+
+        .wrong-answer {
+            color: var(--error-color);
+        }
+
+        /* فوتر */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: #333;
+            color: #aaa;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* دکمه بازگشت به بالا */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            transition: transform 0.3s;
+        }
+
+        #back-to-top:hover {
+            transform: translateY(-5px);
+        }
+
+        /* ریسپانسیو */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .img-container {
+                height: 200px;
+            }
+
+            #wind-tunnel-container {
+                height: 300px;
+            }
+
+            .controls {
+                flex-direction: column;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="cloud" style="top: 20%; width: 100px; height: 40px; animation-duration: 25s;"></div>
+        <div class="cloud" style="top: 60%; width: 140px; height: 50px; animation-duration: 18s;"></div>
+        <h1>دانشنامه جامع آیرودینامیک</h1>
+        <p>درک نیروهایی که آسمان را فتح کرده‌اند</p>
+    </header>
+
+    <main>
+        <!-- مقدمه -->
+        <section id="intro">
+            <h2>آیرودینامیک چیست؟</h2>
+            <div class="img-container">
+                <!-- تصویر رندوم مرتبط با هواپیما از Picsum -->
+                <img src="https://picsum.photos/seed/aerointro/800/300.jpg" alt="مقدمه آیرودینامیک">
+            </div>
+            <p>
+                آیرودینامیک (Aerodynamics) شاخه‌ای از دینامیک سیالات و مکانیک گازها است که به مطالعه حرکت هوا و مخصوصاً
+                تعامل آن با اجسام متحرک در آن می‌پردازد. این علم پایه و اساس طراحی هواپیماها، موشک‌ها، خودروهای سریع و
+                حتی ساختمان‌های بلند است. کلمه آیرودینامیک از دو کلمه یونانی "aero" (هوا) و "dynamics" (نیرو) گرفته شده
+                است.
+            </p>
+            <p>
+                هدف اصلی در آیرودینامیک، رسیدن به شکلی است که بتواند با کمترین مقاومت (Drag) و بیشترین نیروی برآ (Lift)
+                حرکت کند. بدون درک این علم، پرواز انسان محال بود و خودروهای فرمول یک امروز سرعتی کمتر از یک موتورسیکلت
+                معمولی داشتند.
+            </p>
+        </section>
+
+        <!-- نیروهای چهارگانه -->
+        <section id="forces">
+            <h2>چهار نیروی اصلی پرواز</h2>
+            <p>برای اینکه یک جسم مثل هواپیما در هوا بماند و پرواز کند، چهار نیروی اصلی باید با یکدیگر در تعادل یا عدم
+                تعادل کنترل شده باشند. انیمیشن زیر این نیروها را به نمایش می‌گذارد:</p>
+
+            <!-- انیمیشن تعاملی نیروها -->
+            <div class="forces-diagram" id="forces-diagram">
+                <div class="plane-icon">✈️</div>
+                <div class="arrow arrow-lift">برآ (Lift)</div>
+                <div class="arrow arrow-weight">وزن (Weight)</div>
+                <div class="arrow arrow-thrust">رانش (Thrust)</div>
+                <div class="arrow arrow-drag">پسار (Drag)</div>
+            </div>
+            <div style="text-align: center;">
+                <button id="animate-forces-btn"
+                    style="padding: 8px 16px; cursor: pointer; font-family: 'Vazirmatn'; background: var(--primary-color); color: white; border: none; border-radius: 4px;">شروع
+                    نمایش نیروها</button>
+            </div>
+
+            <h3>۱. نیروی برآ (Lift)</h3>
+            <p>این نیرو به صورت عمود بر جهت حرکت هواپیما (و به سمت بالا) اعمال می‌شود. نیروی برآ نتیجه اختلاف فشار بین
+                سطح بالایی و پایینی بال هواپیما است. بال هواپیما طوری طراحی شده که هوای روی آن سریع‌تر از هوای زیر آن
+                حرکت می‌کند.</p>
+
+            <h3>۲. نیروی وزن (Weight)</h3>
+            <p>نیرویی که جاذبه زمین به جسم (هواپیما، مسافران و سوخت) وارد می‌کند. این نیرو همیشه به سمت مرکز زمین
+                (پایین) است. برای پرواز مستقیم و یکنواخت، نیروی برآ باید با وزن برابر باشد.</p>
+
+            <h3>۳. نیروی رانش (Thrust)</h3>
+            <p>نیرویی که باعث حرکت هواپیما به جلو می‌شود. این نیرو توسط موتورها (جت یا پروپلر) تولید می‌شود. رانش باید
+                غلبه بر مقاومت هوا کند تا هواپیما سرعت بگیرد.</p>
+
+            <h3>۴. نیروی پسار یا درگ (Drag)</h3>
+            <p>مقاومت هوا در برابر حرکت جسم. این نیرو در جهت مخالف حرکت اعمال می‌شود و توسط اصطکاک هوا با بدنه و اختلاف
+                فشار ایجاد می‌شود. طراحی آیرودینامیک سعی می‌کند این نیرو را به حداقل برساند.</p>
+        </section>
+
+        <!-- اصل برنولی -->
+        <section id="bernoulli">
+            <h2>اصل برنولی و بال هواپیما</h2>
+            <div class="img-container">
+                <img src="https://picsum.photos/seed/wingair/800/300.jpg" alt="شکل هواپیما">
+            </div>
+            <p>
+                یکی از مهم‌ترین اصول در آیرودینامیک، "اصل برنولی" است. دانیل برنولی ریاضیدان سوئیسی ثابت کرد که در جریان
+                سیال (هوا)، هرجا سرعت بیشتر باشد، فشار کمتر است و بالعکس.
+            </p>
+            <p>
+                سطح بالایی بال هواپیما (بخش Extrados) خمیده‌تر از سطح پایینی (Intrados) است. هواپیما در هوا برش می‌خورد
+                و ذرات هوا باید در یک زمان مشخص به انتهای بال برسند. بنابراین هوایی که روی بال (مسیر طولانی‌تر و
+                خمیده‌تر) حرکت می‌کند، باید سرعت بیشتری داشته باشد. افزایش سرعت در سطح بالا باعث کاهش فشار می‌شود. در
+                حالی که هوای زیر بال سرعت کمتر و در نتیجه فشار بیشتری دارد. این اختلاف فشار (فشار بالا بیشتر از فشار
+                پایین) باعث ایجاد نیروی برآ می‌شود.
+            </p>
+            <div
+                style="background: #e3f2fd; padding: 15px; border-radius: 8px; border-right: 5px solid var(--primary-color);">
+                <strong>نکته کلیدی:</strong> شکل بال هواپیما که به آن "Airfoil" می‌گویند، نقش حیاتی در تولید نیروی برآ
+                دارد.
+            </div>
+        </section>
+
+        <!-- تونل باد و زاویه حمله -->
+        <section id="wind-tunnel">
+            <h2>آزمایشگاه تونل باد و زاویه حمله</h2>
+            <p>در بخش زیر، یک شبیه‌ساز ساده تونل باد طراحی شده است. خطوط آبی نشان‌دهنده جریان هوا هستند. شما می‌توانید
+                "زاویه حمله" (Angle of Attack) یعنی زاویه‌ای که بال نسبت به باد می‌گیرد را تغییر دهید و ببینید چگونه
+                خطوط جریان تغییر می‌کنند.</p>
+            <p style="font-size: 0.9rem; color: var(--text-light);">*دقت کنید که با زیاد شدن زاویه حمله، جریان هوا ممکن
+                است از سطح بال جدا شود (نمادین)، که منجر به واماندگی (Stall) می‌شود.</p>
+
+            <div id="wind-tunnel-container">
+                <canvas id="windCanvas"></canvas>
+                <div class="controls">
+                    <label for="aoa-slider">زاویه حمله:</label>
+                    <input type="range" id="aoa-slider" min="-10" max="30" value="0">
+                    <span id="aoa-value">0°</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- لایه مرزی -->
+        <section id="boundary-layer">
+            <h2>لایه مرزی و جریان‌های متلاطم</h2>
+            <h3>لایه مرزی چیست؟</h3>
+            <p>وقتی هوا روی سطح بدنه هواپیما حرکت می‌کند، ذرات نزدیک به سطح سرعت خود را به دلیل اصطکاک از دست می‌دهند و
+                تقریباً ساکن می‌شوند. این لایه نازک از هوا که سرعت آن از صفر در سطح به سرعت جریان آزاد در فاصله دورتر
+                می‌رسد، "لایه مرزی" نامیده می‌شود.</p>
+
+            <h3>جریان آرام و متلاطم</h3>
+            <p>
+                در ابتدای بال، جریان هوا معمولاً "لامینار" (آرام و منظم) است. اما با حرکت به سمت عقب، جریان ممکن است به
+                "توربولنت" (متلاطم و آشفته) تغییر کند. جریان متلاطم اصطکاک بیشتری ایجاد می‌کند (درگ بیشتر)، اما انرژی
+                بیشتری نیز دارد که به چسبیدن جریان به بال کمک می‌کند و تأخیر در واماندگی ایجاد می‌کند.
+            </p>
+        </section>
+
+        <!-- عدد ماخ و سرعت صوت -->
+        <section id="mach">
+            <h2>عدد ماخ و سرعت صوت</h2>
+            <div class="img-container">
+                <img src="https://picsum.photos/seed/jetfighter/800/300.jpg" alt="جنگنده سوپرسونیک">
+            </div>
+            <p>
+                در آیرودینامیک سرعت‌های بالا، سرعت هوا نسبت به سرعت صوت اهمیت دارد. واحد اندازه‌گیری این نسبت "عدد ماخ"
+                نام دارد. عدد ماخ ۱ یعنی سرعت صوت.
+            </p>
+            <ul>
+                <li><strong>ساب‌سونیک (Subsonic):</strong> کمتر از ماخ ۱ (مثلاً هواپیماهای مسافربری معمولی).</li>
+                <li><strong>ترانسونیک (Transonic):</strong> حدود ماخ ۰.۸ تا ۱.۲ (منطقه‌ای که هم سرعت‌های زیر صوت و هم
+                    بالای صوت روی هواپیما وجود دارد).</li>
+                <li><strong>سوپرسونیک (Supersonic):</strong> بالاتر از ماخ ۱ (جنگنده‌ها). موج ضربه‌ای (Shockwave) ایجاد
+                    می‌شود که باعث صدای انفجاری می‌شود.</li>
+                <li><strong>هایپرسونیک (Hypersonic):</strong> بالاتر از ماخ ۵ (موشک‌های بالستیک).</li>
+            </ul>
+        </section>
+
+        <!-- آزمون -->
+        <section id="quiz">
+            <h2>آزمون دانش آیرودینامیک</h2>
+            <p>حالا که مطالعه کردید، بیایید دانش خود را بسنجید!</p>
+
+            <div class="quiz-container">
+                <form id="quiz-form">
+                    <!-- سوال ۱ -->
+                    <div class="question-block">
+                        <span class="question-text">۱. کدام یک از چهار نیروی پرواز در جهت مخالف حرکت هواپیما عمل
+                            می‌کند؟</span>
+                        <div class="options">
+                            <label><input type="radio" name="q1" value="wrong"> برآ (Lift)</label>
+                            <label><input type="radio" name="q1" value="correct"> پسار یا درگ (Drag)</label>
+                            <label><input type="radio" name="q1" value="wrong"> رانش (Thrust)</label>
+                            <label><input type="radio" name="q1" value="wrong"> وزن (Weight)</label>
+                        </div>
+                    </div>
+
+                    <!-- سوال ۲ -->
+                    <div class="question-block">
+                        <span class="question-text">۲. طبق اصل برنولی، چه اتفاقی باعث ایجاد نیروی برآ می‌شود؟</span>
+                        <div class="options">
+                            <label><input type="radio" name="q2" value="wrong"> فشار بالای بال بیشتر از فشار زیر بال
+                                است.</label>
+                            <label><input type="radio" name="q2" value="correct"> سرعت هوا روی بال بیشتر است، پس فشار
+                                کمتر می‌شود.</label>
+                            <label><input type="radio" name="q2" value="wrong"> موتورها آنقدر قوی هستند که هواپیما را
+                                بالا می‌کشند.</label>
+                            <label><input type="radio" name="q2" value="wrong"> هوای سرد از پایین بال به بالا
+                                می‌رود.</label>
+                        </div>
+                    </div>
+
+                    <!-- سوال ۳ -->
+                    <div class="question-block">
+                        <span class="question-text">۳. لایه‌ای از هوا که در مجاورت سطح بدنه هواپیما سرعت آن به دلیل
+                            اصطکاک کاهش می‌یابد چه نام دارد؟</span>
+                        <div class="options">
+                            <label><input type="radio" name="q3" value="wrong"> لایه اتمسفری</label>
+                            <label><input type="radio" name="q3" value="correct"> لایه مرزی (Boundary Layer)</label>
+                            <label><input type="radio" name="q3" value="wrong"> لایه فرافرم</label>
+                            <label><input type="radio" name="q3" value="wrong"> لایه محافظ</label>
+                        </div>
+                    </div>
+
+                    <!-- سوال ۴ -->
+                    <div class="question-block">
+                        <span class="question-text">۴. عدد ماخ ۱ به چه سرعتی اشاره دارد؟</span>
+                        <div class="options">
+                            <label><input type="radio" name="q4" value="wrong"> دو برابر سرعت صوت</label>
+                            <label><input type="radio" name="q4" value="wrong"> نصف سرعت صوت</label>
+                            <label><input type="radio" name="q4" value="correct"> سرعت صوت</label>
+                            <label><input type="radio" name="q4" value="wrong"> سرعت نور</label>
+                        </div>
+                    </div>
+
+                    <button type="button" id="quiz-btn">ثبت پاسخ‌ها و مشاهده نتیجه</button>
+                    <div id="quiz-result"></div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© ۲۰۲۳ - طراحی شده توسط محمد امین قبادی برای آموزش عالی علوم هوافضا</p>
+        <p>استفاده از تصاویر متحرک و گرافیک آموزشی برای درک بهتر مفاهیم</p>
+    </footer>
+
+    <button id="back-to-top" title="بازگشت به بالا">▲</button>
+
+    <script>
+        // ==========================================
+        // انیمیشن نیروها (CSS Trigger)
+        // ==========================================
+        const forcesBtn = document.getElementById('animate-forces-btn');
+        const forcesDiagram = document.getElementById('forces-diagram');
+
+        forcesBtn.addEventListener('click', () => {
+            // ریست کردن انیمیشن
+            forcesDiagram.classList.remove('forces-active');
+            void forcesDiagram.offsetWidth; // Trigger reflow
+
+            // شروع مجدد
+            forcesDiagram.classList.add('forces-active');
+            forcesBtn.textContent = 'تکرار انیمیشن';
+        });
+
+        // ==========================================
+        // شبیه‌ساز تونل باد (Canvas)
+        // ==========================================
+        const canvas = document.getElementById('windCanvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('aoa-slider');
+        const aoaDisplay = document.getElementById('aoa-value');
+
+        let width, height;
+        let particles = [];
+        let angleOfAttack = 0; // Degrees
+
+        // تنظیم اندازه بوم
+        function resize() {
+            const container = document.getElementById('wind-tunnel-container');
+            width = canvas.width = container.clientWidth;
+            height = canvas.height = container.clientHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // کلاس ذرات خط جریان
+        class Particle {
+            constructor() {
+                this.reset();
+                this.x = Math.random() * width; // شروع تصادفی در صفحه
+            }
+
+            reset() {
+                this.x = 0;
+                this.y = Math.random() * height;
+                this.speed = 3 + Math.random() * 2;
+                this.history = []; // برای رسم دم خط
+            }
+
+            update(wingY, wingAngle) {
+                // محاسبه فاصله تا مرکز بال
+                let dx = this.x - width / 2;
+                let dy = this.y - wingY;
+
+                // چرخش مختصات برای سادگی محاسبات اثر بال
+                // تبدیل زاویه به رادیان
+                let rad = -wingAngle * (Math.PI / 180);
+
+                // چرخش نقطه ذره نسبت به مرکز بال
+                let rotatedX = dx * Math.cos(rad) - dy * Math.sin(rad);
+                let rotatedY = dx * Math.sin(rad) + dy * Math.cos(rad);
+
+                // شکل بال ساده شده (فقط افکت انحراف)
+                // اگر ذره در نزدیکی بال باشد (در سیستم مختصات چرخش یافته)
+                // فرض می‌کنیم بال یک بیضی افقی در مرکز است
+                let wingWidth = 140;
+                let wingThickness = 20;
+
+                let deflectX = 0;
+                let deflectY = 0;
+
+                // شبیه‌سازی عبور از روی/زیر بال
+                if (rotatedX > -wingWidth / 2 && rotatedX < wingWidth / 2) {
+                    // ضریب فشرده شدن جریان روی بال
+                    if (rotatedY < 0) { // سطح بالا
+                        deflectX = this.speed * 0.8; // افزایش سرعت محوری
+                        deflectY = -15 * (1 - Math.abs(rotatedX) / (wingWidth / 2)); // خم شدن خطوط
+                    } else { // سطح پایین
+                        deflectX = this.speed * 0.4;
+                        deflectY = 10 * (1 - Math.abs(rotatedX) / (wingWidth / 2));
+                    }
+                } else if (rotatedX >= wingWidth / 2 && Math.abs(rotatedY) < 30) {
+                    // در عقب بال (ویک)
+                    deflectY = rotatedY > 0 ? 10 : -10;
+                }
+
+                // اعمال تغییرات مکان (نسبی به حرکت کلی)
+                this.x += this.speed + deflectX * 0.1;
+
+                // برگرداندن انحراف Y به سیستم مختصات اصلی با چرخش معکوس
+                let localDeflectX = deflectX * 0.1;
+                let localDeflectY = deflectY * 0.1;
+
+                let finalDeflectX = localDeflectX * Math.cos(rad) + localDeflectY * Math.sin(rad);
+                let finalDeflectY = -localDeflectX * Math.sin(rad) + localDeflectY * Math.cos(rad);
+
+                this.y += finalDeflectY;
+
+                // ذخیره تاریخچه برای رسم خط
+                this.history.push({ x: this.x, y: this.y });
+                if (this.history.length > 20) this.history.shift();
+
+                // ریست اگر از صفحه خارج شد
+                if (this.x > width) this.reset();
+            }
+
+            draw() {
+                if (this.history.length < 2) return;
+                ctx.beginPath();
+                ctx.moveTo(this.history[0].x, this.history[0].y);
+                for (let i = 1; i < this.history.length; i++) {
+                    ctx.lineTo(this.history[i].x, this.history[i].y);
+                }
+                ctx.strokeStyle = `rgba(100, 200, 255, ${0.3 + Math.random() * 0.4})`;
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            }
+        }
+
+        // ایجاد ذرات
+        for (let i = 0; i < 100; i++) {
+            particles.push(new Particle());
+        }
+
+        // تابع رسم بال
+        function drawWing(cx, cy, angle) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(angle * Math.PI / 180);
+
+            // رسم شکل ایرفویل (ساده شده)
+            ctx.beginPath();
+            ctx.moveTo(-70, 0);
+            ctx.bezierCurveTo(-30, -25, 30, -25, 70, 0); // سطح بالا (خمیده)
+            ctx.bezierCurveTo(30, 5, -30, 5, -70, 0);   // سطح پایین (تقریبا صاف)
+            ctx.fillStyle = '#ff9800';
+            ctx.fill();
+            ctx.strokeStyle = '#e65100';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.restore();
+        }
+
+        // حلقه انیمیشن
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // رسم ذرات
+            particles.forEach(p => p.update(height / 2, angleOfAttack));
+            particles.forEach(p => p.draw());
+
+            // رسم بال روی ذرات
+            drawWing(width / 2, height / 2, angleOfAttack);
+
+            requestAnimationFrame(animate);
+        }
+
+        // کنترل اسلایدر
+        slider.addEventListener('input', (e) => {
+            angleOfAttack = parseInt(e.target.value);
+            aoaDisplay.textContent = angleOfAttack + '°';
+        });
+
+        // شروع انیمیشن
+        animate();
+
+
+        // ==========================================
+        // سیستم آزمون (Quiz Logic)
+        // ==========================================
+        const quizBtn = document.getElementById('quiz-btn');
+        const quizResult = document.getElementById('quiz-result');
+        const quizForm = document.getElementById('quiz-form');
+
+        const correctAnswers = {
+            q1: 'correct',
+            q2: 'correct',
+            q3: 'correct',
+            q4: 'correct'
+        };
+
+        quizBtn.addEventListener('click', () => {
+            let score = 0;
+            let total = 4;
+            let unanswered = false;
+
+            // بررسی پاسخ‌ها
+            for (let key in correctAnswers) {
+                const options = document.getElementsByName(key);
+                let answered = false;
+                for (let option of options) {
+                    if (option.checked) {
+                        answered = true;
+                        if (option.value === correctAnswers[key]) {
+                            score++;
+                        }
+                        // استایل دهی visual برای پاسخ‌ها
+                        const parentLabel = option.parentElement;
+                        if (option.value === correctAnswers[key]) {
+                            parentLabel.style.backgroundColor = '#d4edda';
+                            parentLabel.style.borderColor = '#28a745';
+                        } else if (option.checked && option.value !== correctAnswers[key]) {
+                            parentLabel.style.backgroundColor = '#f8d7da';
+                            parentLabel.style.borderColor = '#dc3545';
+                        }
+                    }
+                }
+                if (!answered) unanswered = true;
+            }
+
+            if (unanswered) {
+                quizResult.style.display = 'block';
+                quizResult.style.backgroundColor = '#fff3cd';
+                quizResult.style.color = '#856404';
+                quizResult.textContent = 'لطفاً به همه سوالات پاسخ دهید.';
+                return;
+            }
+
+            // نمایش نتیجه نهایی
+            quizResult.style.display = 'block';
+            if (score === total) {
+                quizResult.className = 'correct-answer';
+                quizResult.style.backgroundColor = '#d4edda';
+                quizResult.style.color = '#155724';
+                quizResult.innerHTML = `آفرین! شما همه ${total} سوال را صحیح پاسخ دادید. 🎉`;
+            } else if (score > total / 2) {
+                quizResult.style.backgroundColor = '#fff3cd';
+                quizResult.style.color = '#856404';
+                quizResult.textContent = `خوب بود! شما ${score} از ${total} پاسخ صحیح داشتید.`;
+            } else {
+                quizResult.className = 'wrong-answer';
+                quizResult.style.backgroundColor = '#f8d7da';
+                quizResult.style.color = '#721c24';
+                quizResult.textContent = `نیاز به تلاش بیشتر! شما ${score} از ${total} پاسخ صحیح داشتید. پیشنهاد می‌شود دوباره مطالعه کنید.`;
+            }
+
+            // اسکرول نرم به نتیجه
+            quizResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+
+        // ==========================================
+        // دکمه بازگشت به بالا
+        // ==========================================
+        const backToTopBtn = document.getElementById('back-to-top');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.style.display = 'flex';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+    </script>
+</body>
+
+</html>
